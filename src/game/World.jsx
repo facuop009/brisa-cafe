@@ -167,7 +167,7 @@ function LookDrag() {
 
 /* ---------------- barista ---------------- */
 
-const BARISTA = { shirt: '#f4efe6', pants: '#2d3138', skin: '#e0ac88', hair: '#2a1d16', long: false }
+const BARISTA = { shirt: '#f4efe6', pants: '#2d2a2e', skin: '#f1c7a8', hair: '#4a2c1c', girl: true, skirt: '#5a3550' }
 const SPEED = 2.7
 
 function Player() {

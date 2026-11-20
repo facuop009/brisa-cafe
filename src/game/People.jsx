@@ -15,6 +15,11 @@ const geo = {
   apron: new THREE.BoxGeometry(0.36, 0.56, 0.03),
   cap: new THREE.CylinderGeometry(0.16, 0.16, 0.06, 20),
   shoe: new THREE.BoxGeometry(0.12, 0.08, 0.22),
+  hairBack: new THREE.CapsuleGeometry(0.15, 0.32, 4, 12),
+  lock: new THREE.CapsuleGeometry(0.045, 0.22, 4, 8),
+  bow: new THREE.SphereGeometry(0.05, 10, 8),
+  lips: new THREE.SphereGeometry(0.02, 8, 6),
+  skirt: new THREE.CylinderGeometry(0.19, 0.31, 0.4, 24),
 }
 
 const matCache = new Map()
@@ -76,7 +81,8 @@ export function Person({ look, read, barista = false, children }) {
           </group>
         ))}
         <mesh geometry={geo.torso} material={m.shirt} position={[0, 1.2, 0]} castShadow />
-        {barista && <mesh geometry={geo.apron} material={mat('#e7a1a8', 0.8)} position={[0, 1.08, 0.19]} castShadow />}
+        {barista && <mesh geometry={geo.apron} material={mat('#e7a1a8', 0.8)} position={[0, 1.08, 0.215]} castShadow />}
+        {look.skirt && <mesh geometry={geo.skirt} material={mat(look.skirt, 0.8)} position={[0, 0.82, 0]} castShadow />}
         {[
           [armL, -0.27],
           [armR, 0.27],
@@ -88,8 +94,20 @@ export function Person({ look, read, barista = false, children }) {
         ))}
         <mesh geometry={geo.head} material={m.skin} position={[0, 1.71, 0]} castShadow />
         <mesh geometry={geo.hair} material={m.hair} position={[0, 1.73, -0.015]} rotation={[-0.25, 0, 0]} castShadow />
-        {look.long && <mesh geometry={geo.tail} material={m.hair} position={[0, 1.6, -0.14]} rotation={[0.3, 0, 0]} />}
-        {barista && <mesh geometry={geo.cap} material={mat('#221b17', 0.7)} position={[0, 1.85, 0]} />}
+        {look.long && !look.girl && <mesh geometry={geo.tail} material={m.hair} position={[0, 1.6, -0.14]} rotation={[0.3, 0, 0]} />}
+        {look.girl && (
+          <>
+            <mesh geometry={geo.hairBack} material={m.hair} position={[0, 1.58, -0.08]} scale={[1.15, 1, 0.75]} castShadow />
+            {[-0.135, 0.135].map((x) => (
+              <mesh key={x} geometry={geo.lock} material={m.hair} position={[x, 1.6, 0.02]} rotation={[0, 0, x > 0 ? 0.08 : -0.08]} castShadow />
+            ))}
+            {[-0.045, 0.045].map((x) => (
+              <mesh key={x} geometry={geo.bow} material={mat('#e7a1a8', 0.6)} position={[0.09 + x, 1.86, 0.02]} scale={[1, 0.7, 0.6]} />
+            ))}
+            <mesh geometry={geo.lips} material={mat('#c4566e', 0.5)} position={[0, 1.655, 0.138]} scale={[1.6, 0.7, 0.6]} />
+          </>
+        )}
+        {barista && !look.girl && <mesh geometry={geo.cap} material={mat('#221b17', 0.7)} position={[0, 1.85, 0]} />}
         {[-0.05, 0.05].map((x) => (
           <mesh key={x} geometry={geo.eye} material={eyeMat} position={[x, 1.73, 0.135]} />
         ))}
