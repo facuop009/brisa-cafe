@@ -1,6 +1,6 @@
 // Offline support for the game: hashed build assets are cached forever, the page itself network-first.
 // Paths are relative to wherever the game is hosted (site root or a GitHub Pages subfolder).
-const CACHE = 'asa-cafe-juego-v2'
+const CACHE = 'asa-cafe-juego-v3'
 const BASE = self.location.pathname.replace(/[^/]*$/, '')
 const PAGE = `${BASE}juego.html`
 
@@ -34,8 +34,9 @@ self.addEventListener('fetch', (e) => {
     return
   }
   if (url.pathname === PAGE) {
+    // GitHub Pages sends max-age=600; always revalidate so a new deploy shows up on the next open.
     e.respondWith(
-      fetch(e.request)
+      fetch(e.request, { cache: 'no-cache' })
         .then((res) => {
           const copy = res.clone()
           caches.open(CACHE).then((c) => c.put(PAGE, copy))
