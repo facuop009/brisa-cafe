@@ -1,0 +1,20 @@
+{
+  "name": "ASA Café — el juego",
+  "short_name": "ASA Café",
+  "description": "Atendé el café ASA: tomá pedidos, prepará cafés y entregalos.",
+  "lang": "es",
+  "id": "juego.html",
+  "start_url": "juego.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "any",
+  "background_color": "#221b17",
+  "theme_color": "#221b17",
+  "categories": ["games"],
+  "icons": [
+    { "src": "game-icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "game-icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "game-icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
