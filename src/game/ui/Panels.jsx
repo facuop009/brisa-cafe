@@ -1,4 +1,4 @@
-import { INGREDIENTS, RECIPES, SUPPLIES, VESSELS, buy, setPanel, unlocked, useGame } from '../engine'
+import { INGREDIENTS, RECIPES, SUPPLIES, VESSELS, buy, peso, setPanel, unlocked, useGame } from '../engine'
 import { Icon } from './Icon'
 
 function Sheet({ title, panel, children, foot }) {
@@ -24,7 +24,7 @@ export function Inventory() {
       panel="inventory"
       foot={
         <span className="sheet__money">
-          <Icon name="coin" size={20} /> {g.money} kr disponibles
+          <Icon name="coin" size={20} /> {peso(g.money)} disponibles
         </span>
       }
     >
@@ -40,7 +40,7 @@ export function Inventory() {
               </span>
               <button type="button" className="btn btn--buy" onClick={() => buy(k)} disabled={g.money < s.cost}>
                 +{s.pack}
-                <small>{s.cost} kr</small>
+                <small>{peso(s.cost)}</small>
               </button>
             </li>
           )
@@ -60,7 +60,7 @@ export function Recipes() {
           <li key={k} className="recipe">
             <span className="recipe__top">
               <b>{r.name}</b>
-              <span>{r.price} kr</span>
+              <span>{peso(r.price)}</span>
             </span>
             {r.pastry ? (
               <span className="recipe__row">

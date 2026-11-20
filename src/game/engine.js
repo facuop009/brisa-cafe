@@ -3,14 +3,14 @@ import { useSyncExternalStore } from 'react'
 /* ---------------- data ---------------- */
 
 export const RECIPES = {
-  espresso: { name: 'Espresso', price: 32, vessel: 'chica', items: ['espresso'], day: 1 },
-  cortado: { name: 'Cortado', price: 38, vessel: 'chica', items: ['espresso', 'leche'], day: 1 },
-  americano: { name: 'Americano', price: 36, vessel: 'grande', items: ['espresso', 'agua'], day: 1 },
-  lazo: { name: 'Lazo de cardamomo', price: 36, pastry: true, day: 1 },
-  flatwhite: { name: 'Flat white', price: 44, vessel: 'grande', items: ['espresso', 'leche'], day: 2 },
-  latte: { name: 'Latte', price: 46, vessel: 'grande', items: ['espresso', 'leche', 'espuma'], day: 2 },
-  iced: { name: 'Iced latte', price: 48, vessel: 'vaso', items: ['hielo', 'espresso', 'leche'], day: 3 },
-  matcha: { name: 'Matcha latte', price: 56, vessel: 'grande', items: ['matcha', 'leche', 'espuma'], day: 3 },
+  espresso: { name: 'Espresso', price: 3200, vessel: 'chica', items: ['espresso'], day: 1 },
+  cortado: { name: 'Cortado', price: 3800, vessel: 'chica', items: ['espresso', 'leche'], day: 1 },
+  americano: { name: 'Americano', price: 3600, vessel: 'grande', items: ['espresso', 'agua'], day: 1 },
+  lazo: { name: 'Lazo de cardamomo', price: 3500, pastry: true, day: 1 },
+  flatwhite: { name: 'Flat white', price: 4400, vessel: 'grande', items: ['espresso', 'leche'], day: 2 },
+  latte: { name: 'Latte', price: 4600, vessel: 'grande', items: ['espresso', 'leche', 'espuma'], day: 2 },
+  iced: { name: 'Iced latte', price: 4800, vessel: 'vaso', items: ['hielo', 'espresso', 'leche'], day: 3 },
+  matcha: { name: 'Matcha latte', price: 5600, vessel: 'grande', items: ['matcha', 'leche', 'espuma'], day: 3 },
 }
 
 export const INGREDIENTS = {
@@ -29,12 +29,12 @@ export const VESSELS = {
 }
 
 export const SUPPLIES = {
-  granos: { name: 'Granos de café', pack: 10, cost: 40, day: 1 },
-  leche: { name: 'Leche', pack: 10, cost: 30, day: 1 },
-  tazas: { name: 'Tazas', pack: 10, cost: 20, day: 1 },
-  lazos: { name: 'Lazos de cardamomo', pack: 6, cost: 54, day: 1 },
-  vasos: { name: 'Vasos', pack: 10, cost: 20, day: 3 },
-  matcha: { name: 'Matcha', pack: 5, cost: 45, day: 3 },
+  granos: { name: 'Granos de café', pack: 10, cost: 4000, day: 1 },
+  leche: { name: 'Leche', pack: 10, cost: 3000, day: 1 },
+  tazas: { name: 'Tazas', pack: 10, cost: 2000, day: 1 },
+  lazos: { name: 'Lazos de cardamomo', pack: 6, cost: 5400, day: 1 },
+  vasos: { name: 'Vasos', pack: 10, cost: 2000, day: 3 },
+  matcha: { name: 'Matcha', pack: 5, cost: 4500, day: 3 },
 }
 
 export const MAX_PICKUP = 3
@@ -74,18 +74,25 @@ const SAVE_KEY = 'asa-cafe-juego-v1'
 function freshProgress() {
   return {
     day: 1,
-    money: 150,
+    money: 15000,
     rating: 4,
     best: 0,
     stock: { granos: 12, leche: 10, tazas: 15, lazos: 4, vasos: 0, matcha: 0 },
   }
 }
 
+export const peso = (n) => `$ ${Math.round(n).toLocaleString('es-AR')}`
+
 function loadProgress() {
   try {
     const raw = localStorage.getItem(SAVE_KEY)
     if (!raw) return null
     const p = JSON.parse(raw)
+    // Saves from before the switch to pesos were in kroner, a hundred times smaller.
+    if (!p.ars) {
+      p.money = (p.money || 0) * 100
+      p.best = (p.best || 0) * 100
+    }
     return { ...freshProgress(), ...p, stock: { ...freshProgress().stock, ...p.stock } }
   } catch {
     return null
@@ -95,7 +102,7 @@ function loadProgress() {
 function saveProgress() {
   try {
     const { day, money, rating, best, stock } = state
-    localStorage.setItem(SAVE_KEY, JSON.stringify({ day, money, rating, best, stock }))
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ day, money, rating, best, stock, ars: true }))
   } catch {
     /* storage can be unavailable (private mode); the game still runs */
   }
@@ -395,7 +402,7 @@ function deliver(c) {
   }
   const r = RECIPES[c.order]
   const frac = Math.max(0, c.patience / c.patienceMax)
-  const tip = Math.round(r.price * 0.35 * frac)
+  const tip = Math.round((r.price * 0.35 * frac) / 50) * 50
   state.money += r.price + tip
   state.stats.served++
   state.stats.earned += r.price + tip
@@ -405,7 +412,7 @@ function deliver(c) {
   state.player.hand = null
   c.state = 'served'
   c.timer = 3.2
-  toast(tip ? `+${r.price} kr  · propina ${tip} kr` : `+${r.price} kr`, 'coin')
+  toast(tip ? `+${peso(r.price)}  · propina ${peso(tip)}` : `+${peso(r.price)}`, 'coin')
   buzz(25)
 }
 

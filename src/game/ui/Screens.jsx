@@ -1,4 +1,4 @@
-import { nextDay, pause, quitToMenu, startGame, useGame } from '../engine'
+import { nextDay, pause, peso, quitToMenu, startGame, useGame } from '../engine'
 import { Icon } from './Icon'
 
 export function Settings({ settings, setSettings }) {
@@ -125,23 +125,23 @@ export function SummaryScreen() {
           </div>
           <div>
             <dt>Ventas</dt>
-            <dd>{s.earned - s.tips} kr</dd>
+            <dd>{peso(s.earned - s.tips)}</dd>
           </div>
           <div>
             <dt>Propinas</dt>
-            <dd>{s.tips} kr</dd>
+            <dd>{peso(s.tips)}</dd>
           </div>
           <div>
             <dt>Compras</dt>
-            <dd>{s.spent ? `−${s.spent}` : 0} kr</dd>
+            <dd>{s.spent ? `−${peso(s.spent)}` : peso(0)}</dd>
           </div>
           <div className="summary__total">
             <dt>Ganancia del día</dt>
-            <dd>{net} kr</dd>
+            <dd>{peso(net)}</dd>
           </div>
         </dl>
         <p className="summary__money">
-          <Icon name="coin" size={20} /> En caja: {g.money} kr
+          <Icon name="coin" size={20} /> En caja: {peso(g.money)}
         </p>
         <div className="card__actions">
           <button type="button" className="btn btn--primary btn--big" onClick={nextDay}>

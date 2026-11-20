@@ -1,4 +1,4 @@
-import { RECIPES, clockLabel, discardHand, interact, lowStock, pause, setPanel, tapCustomer, useGame } from '../engine'
+import { RECIPES, clockLabel, discardHand, interact, lowStock, pause, peso, setPanel, tapCustomer, useGame } from '../engine'
 import { Icon } from './Icon'
 
 function Stars({ value }) {
@@ -22,7 +22,7 @@ function TopBar({ device }) {
     <div className="topbar">
       <div className="topbar__stats">
         <span className="pill pill--money">
-          <Icon name="coin" size={18} /> {g.money} kr
+          <Icon name="coin" size={18} /> {peso(g.money)}
         </span>
         <span className="pill">
           Día {g.day} · <b>{clockLabel()}</b>
